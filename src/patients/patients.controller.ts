@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { CreatePatientCommand } from './commands/create-patient.command';
+import { CreatePatientCommand } from './commands/create-patient/create-patient.command';
+import { UpdateAllergiesCommand } from './commands/update-allergies/update-allergies.command';
 import { CreatePatientResquest } from './dto/request/create-patient-request.dto';
 import { UpdatePatientAllergiesRequest } from './dto/request/update-patient-allergies-request.dto';
 
@@ -23,9 +24,16 @@ export class PatientsController {
     );
   }
 
-  @Patch(':id')
+  @Patch(':id/allergies')
   async updatePatientAllergies(
     @Param('id') patientId: string,
     @Body() updatePatientAllergiesRequest: UpdatePatientAllergiesRequest,
-  ): Promise<void> {}
+  ): Promise<void> {
+    await this.commandBus.execute<UpdateAllergiesCommand, void>(
+      new UpdateAllergiesCommand(
+        patientId,
+        updatePatientAllergiesRequest.allergies,
+      ),
+    );
+  }
 }

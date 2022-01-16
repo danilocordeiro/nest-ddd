@@ -1,5 +1,5 @@
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { PatientFactory } from '../patient.factory';
+import { PatientFactory } from '../../patient.factory';
 import { CreatePatientCommand } from './create-patient.command';
 
 @CommandHandler(CreatePatientCommand)
