@@ -26,7 +26,6 @@
     "@nestjs/cqrs": "^8.0.1",
     "@nestjs/mongoose": "^9.0.2",
     "@nestjs/platform-express": "^8.0.0",
-    "mongodb": "^4.3.0",
     "mongoose": "^6.1.6",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",

@@ -1,4 +1,4 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { PatientFactory } from '../patient.factory';
 import { CreatePatientCommand } from './create-patient.command';
 
@@ -6,10 +6,16 @@ import { CreatePatientCommand } from './create-patient.command';
 export class CreatePatientHandler
   implements ICommandHandler<CreatePatientCommand>
 {
-  constructor(private readonly patientFactory: PatientFactory) {}
+  constructor(
+    private readonly patientFactory: PatientFactory,
+    private readonly eventPublisher: EventPublisher,
+  ) {}
 
   async execute({ createPatientRequest }: CreatePatientCommand): Promise<void> {
     const { name, age, allergies } = createPatientRequest;
-    this.patientFactory.create(name, age, allergies);
+    const patient = this.eventPublisher.mergeObjectContext(
+      await this.patientFactory.create(name, age, allergies),
+    );
+    patient.commit();
   }
 }
